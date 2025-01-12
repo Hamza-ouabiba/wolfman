@@ -2,7 +2,6 @@ let wolves = []
 let obstacles = [];
 let wolfMan;
 let principal;
-let behavior;
 let mode = 'normal'
 
 function setup() {
@@ -30,36 +29,49 @@ function draw() {
   wolfMan.applyBehaviors(Behavior.seek,createVector(mouseX,mouseY))
   wolfMan.update();
   wolfMan.show();
-  let target = p5.Vector.sub(wolfMan.pos, wolfMan.vel.copy().setMag(40));
+  // ce point va etre le target des wolves : 
+  let behindTarget = wolfMan.PointBehind();
   // dessin des obstacles:  
   obstacles.forEach(o => {
     o.show();
   })
-  wolves.forEach((wolf, index) => {
-    if(mode === "snake") {
-      if (index === 0) {
-        wolf.applyBehaviors(Behavior.seek,wolfMan.pos);
-      } else {
-        let wolfPrecedent = wolves[index - 1];
-        wolf.applyBehaviors(Behavior.seek,wolfPrecedent.pos);
+ 
+  if(Character.debug) {
+     // dessin de la souris
+      fill("white")
+      circle(mouseX,mouseY,30)
+  }
+  
+  // dessin des wolves qui suivent le wolfman :
+  wolves.forEach((w,index) => {
+    switch(mode) {
+      case "snake": 
+        {
+          if(index === 0) {
+            w.applyBehaviors(Behavior.seek,wolfMan.pos);
+          } else {
+            w.applyBehaviors(Behavior.seek,wolves[index - 1].pos);
+          }
+        };break;
+      case "normal": {
+        w.applyBehaviors(Behavior.seek,wolfMan.pos);
+      };break;
+      case "leader": {
+        w.applyBehaviors(Behavior.seek,behindTarget);
       }
-    } else if(mode === "normal") {
-       wolf.applyBehaviors(Behavior.seek,createVector(mouseX,mouseY))
-    } else if(mode === "leader") {
-      // comportement leader : 
-      wolf.applyBehaviors(Behavior.seek,(createVector(target.x,target.y)));
-    }l
-    
-    wolf.show()
-    wolf.update()
+    }
+    w.update();
+    w.show();
   })
 
- 
   // dessin du wolfman 
  
 }
 
-
+// ajout d'un obstacle a la position de la souris
+function mousePressed() {
+   obstacles.push(new Obstacle(mouseX,mouseY,50,"green"))
+}
 
 function keyPressed() {
     switch(key) {
@@ -67,5 +79,6 @@ function keyPressed() {
        case 's': mode = 'snake';break;
        case 'l': mode = 'leader';break;
        case 'n': mode = 'normal';break;
+       case 'w': wolves.push(new Wolf(random(width),random(height),"red","wolf 4"));break;
     }
 }

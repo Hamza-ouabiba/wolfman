@@ -2,7 +2,7 @@ class Behavior {
     constructor() {
       
     }
-    arrive(target, d=0) {
+    static arrive(target, d=0) {
         return this.seek(target, true, d);
     }
 
@@ -26,14 +26,7 @@ class Behavior {
     }
 
     static flee(object,target) {
-        let vitesseSouhaitee = p5.Vector.sub(object.pos, target);
-
-        vitesseSouhaitee.setMag(object.maxSpeed);
-    
-        let force = p5.Vector.sub(vitesseSouhaitee, object.vel);
-    
-        force.limit(object.maxForce);
-        return force;
+       return this.seek(object,target).mult(-1);
     }
 
 
@@ -42,7 +35,6 @@ class Behavior {
     let steer = createVector(0, 0, 0);
     let count = 0;
 
-    
     for (let i = 0; i < boids.length; i++) {
       let other = boids[i];
       let d = p5.Vector.dist(current.pos, other.pos);
@@ -60,9 +52,9 @@ class Behavior {
 
     if (steer.mag() > 0) {
       steer.normalize();
-      steer.mult(current.maxspeed);
-      steer.sub(current.velocity);
-      steer.limit(current.maxforce);
+      steer.mult(current.maxSpeed);
+      steer.sub(current.vel);
+      steer.limit(current.maxForce);
     } 
     return steer;
   }
@@ -83,77 +75,106 @@ class Behavior {
     return obstacleLePlusProche;
   }
 
-  static avoid(current,obstacles) {
+  static avoid(current,obstacles, considereVehiculesCommeObstacles = false) {
+    let force;
+    // On calcule un pointdevant le véhicule courant
+    // on l'appelle ahead
+    // et on le postionne à une distance this.distanceAhead devant le véhicule
     let ahead = current.vel.copy();
-    ahead.mult(30);
+   // ahead.normalize();
+    ahead.mult(current.distanceAhead);
+
+    // on prend un point ahead2 au milieu
     let ahead2 = ahead.copy();
     ahead2.mult(0.5);
 
-    if(Character.debug) {
-      current.drawVector(current.pos, ahead, "yellow");
-    }
+    // On prend ahead3 = la position du vaisseau
+    let ahead3 = ahead2.copy();
+    ahead3.mult(0.5);
 
-    let pointAuBoutDeAhead = current.pos.copy().add(ahead);
-    let pointAuBoutDeAhead2 = current.pos.copy().add(ahead2);
+    // if (Character.debug) {
+    //   // on dessine le vecteur ahead en jaune
+    //   current.drawVector(current.pos, ahead, "yellow");
+    // }
+    // Pour le dessiner, il faut lui ajouter la position du véhicule
+    ahead.add(current.pos);
+    ahead2.add(current.pos);
+    ahead3.add(current.pos);
 
+    // if (Character.debug) {
+    //   // on le dessine en rouge
+    //   fill("red");
+    //   circle(ahead.x, ahead.y, 10);
+
+    //   fill("lightblue");
+    //   circle(ahead2.x, ahead2.y, 15);
+
+    //   fill("pink");
+    //   circle(ahead3.x, ahead3.y, 20);
+    // }
+
+    // On cherche l'obstacle le plus proche
     let obstacleLePlusProche = this.getObstacleLePlusProche(current,obstacles);
 
-    if (obstacleLePlusProche == undefined) {
-      return createVector(0, 0);
-    }
-
-    let distance1 = pointAuBoutDeAhead.dist(obstacleLePlusProche.pos);
-    let distance2 = pointAuBoutDeAhead2.dist(obstacleLePlusProche.pos);
-    let distance = min(distance1, distance2);
-
-
-    fill("red");
-    circle(pointAuBoutDeAhead.x, pointAuBoutDeAhead.y, 10);
-    fill("blue");
-    circle(pointAuBoutDeAhead2.x, pointAuBoutDeAhead2.y, 10);
-
-    stroke(100, 100);
-    strokeWeight(current.largeurZoneEvitementDevantVaisseau);
-    line(current.pos.x, current.pos.y, pointAuBoutDeAhead.x, pointAuBoutDeAhead.y);
+    // On calcule la distance entre la position de l'obstacle le plus proche
+    // et le point ahead
+    let distance1 = ahead.dist(obstacleLePlusProche.pos);
+    let distance2 = ahead2.dist(obstacleLePlusProche.pos);
+    let distance3 = ahead3.dist(obstacleLePlusProche.pos);
+    // on regarde laquelle est la plus petite
+    let plusPetiteDistance = min(distance1, distance2);
+    plusPetiteDistance = min(plusPetiteDistance, distance3);
 
 
-    if (distance < obstacleLePlusProche.r + current.largeurZoneEvitementDevantVaisseau + current.r) {
-
-      let force;
-      if (distance1 < distance2) {
-        force = p5.Vector.sub(pointAuBoutDeAhead, obstacleLePlusProche.pos);
-      }
-      else {
-        force = p5.Vector.sub(pointAuBoutDeAhead2, obstacleLePlusProche.pos);
-      }
-      if(Character.debug) {
-        current.drawVector(obstacleLePlusProche.pos, force, "yellow");
+    // si distance < rayon de l'obstacle + rayon du véhicule
+    // Alors il y a collision possible, on calcule la force d'évitement
+    if (plusPetiteDistance < obstacleLePlusProche.r + current.r / 2) {
+      // collision possible, on calcule le vecteur qui va 
+      // du centre de l'obstacle jusqu'au point ahead, il représente
+      // la direction dans laquelle on doit aller pour éviter l'obstacle
+      // c'est la  vitesse désirée ?
+      let desiredSpeed;
+      if(plusPetiteDistance == distance1){
+        desiredSpeed = p5.Vector.sub(ahead, obstacleLePlusProche.pos);
+      } else if(plusPetiteDistance == distance2){
+        desiredSpeed = p5.Vector.sub(ahead2, obstacleLePlusProche.pos);
+      } else {
+        desiredSpeed = p5.Vector.sub(ahead3, obstacleLePlusProche.pos);
       }
 
-      force.setMag(current.maxSpeed);
-      force.sub(current.vel);
+      // if (Character.debug) {
+      //   // On dessine ce vecteur qui part du centre de l'obstacle
+      //   // et va vers le point ahead
+      //   current.drawVector(obstacleLePlusProche.pos, desiredSpeed, "yellow");
+      // }
+
+      // on calcule la force
+      // 1 - on met desiredSpeed au maximum
+      desiredSpeed.setMag(current.maxSpeed);
+      
+      // 2 - formule magique : force = vitesse desiree - vitesse actuelle
+      force = p5.Vector.sub(desiredSpeed, current.vel);
+      // on la limite
       force.limit(current.maxForce);
+
+      // et on la renvoie
       return force;
     } else {
-      return createVector(0, 0);
+      // pas de collision possible
+      force = createVector(0, 0);
     }
-  }
+      return force;
+    //}
 
+    return createVector(0, 0);
+
+  }
  
   static pursue(target) { 
     let prediction = target.vel.copy();
     prediction.mult(10);
 
-    if (Vehicle.debug) {
-      this.drawVector(target.pos, prediction, "yellow");
-    }
-
     prediction.add(target.pos);
-
-    if (Vehicle.debug) {
-      fill(0, 255, 0);
-      circle(prediction.x, prediction.y, 16);
-    }
 
     return this.seek(prediction);
   }
@@ -162,4 +183,5 @@ class Behavior {
     return this.pursue(target).mult(-1);
   }
 
+  
 }

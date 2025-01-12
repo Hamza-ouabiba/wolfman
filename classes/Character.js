@@ -1,6 +1,5 @@
 class Character {
     constructor(x, y,color,name,behaviors) {
-      this.behaviors = behaviors;
       this.name = name;
       this.pos = createVector(x, y);
       this.vel = createVector(0, 0);
@@ -8,12 +7,13 @@ class Character {
       this.maxSpeed = 6;
       this.maxForce = 0.25;
       this.seekWeight = 1
+      this.fleeWeight = 10
       // rayon du véhicule
-      this.r = 16;
+      this.r = 19;
       this.color = color;
       this.rayonZoneDeFreinage = 150;
-      this.distanceSeparation = this.r;
-      this.separateWeight = 3;
+      this.distanceSeparation = this.r ;
+      this.separateWeight = 7;
       // Pour le confinement
       this.boundariesWeight = 10;
 
@@ -47,18 +47,56 @@ class Character {
 
 
     applyBehaviors(behavior,target) {
-      let seekForce;
       let boundariesForce = this.boundaries(this.boundariesX, this.boundariesY, this.boundariesWidth, this.boundariesHeight, this.boundariesDistance);
       boundariesForce.mult(this.boundariesWeight);
-      // j'applique la force de seek sur le wolf et le wolfman
-      if(this instanceof Wolf || this instanceof WolfMan ) {
-        seekForce = behavior(this,target,true);
-        seekForce.mult(this.seekWeight)
+      // pour tous les personnages on applique le comportement de séparation
+      // combiner le wolfMan et les wolves dans un seul tableau
+      let boids = [wolfMan,...wolves];
+      let separateForce = Behavior.separate(this.distanceSeparation,this,boids);
+      separateForce.mult(this.separateWeight);
+
+      // pour tous les personnages on applique le comportement d'évitement d'obstacle
+      let avoidForce = Behavior.avoid(this,obstacles);
+      avoidForce.mult(this.avoidWeight)
+      // pour le wolf et le wolfMan on applique le comportement de arrive
+      if(this instanceof Wolf || this instanceof WolfMan) {
+        let seekForce = behavior(this,target,true);
+        seekForce.mult(this.seekWeight);
         this.applyForce(seekForce);
-        this.separateWolf(obstacles);
+      }
+
+      // le comportement leader : 
+      // on applique le flee si on est dans la zone devant le leader 
+      // sinon on applique le seek
+      // mais on calcule d'abbord la distance 
+      if(this instanceof Wolf && mode === "leader") {
+        // on projette un ahead devant le leader
+        let ahead = wolfMan.vel.copy();
+        ahead.normalize();
+        ahead.mult(40);
+        let pointAuBoutDeAhead = wolfMan.pos.copy().add(ahead);
+        // verifier si le wolf est dans la zone devant le leader
+        let distance = this.pos.dist(pointAuBoutDeAhead);
+        if(distance < wolfMan.sightRadius) {
+          console.log("oui flee")
+          let fleeForce = Behavior.flee(this,wolfMan.pos);
+          fleeForce.mult(this.fleeWeight);
+          this.applyForce(fleeForce);
+        }
+        // dessin du cercle de vision du leader
+        push();
+        noFill();
+        stroke("red");
+        circle(pointAuBoutDeAhead.x,pointAuBoutDeAhead.y,wolfMan.sightRadius * 2);
+        pop();
+       
       }
       
-      this.applyForce(boundariesForce)
+
+     
+      this.applyForce(boundariesForce);
+      this.applyForce(avoidForce);
+      this.applyForce(separateForce);
     }
   
     applyForce(force) {
@@ -88,7 +126,9 @@ class Character {
       
       pop();
   
-      this.drawVelocityVector();
+      if(Character.debug) {
+        this.drawVelocityVector();
+      }
     }
   
     drawVelocityVector() {
@@ -102,15 +142,7 @@ class Character {
       translate(-arrowSize / 2, 0);
       triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
       pop();
-      // dessin d'un point derriere le wolfMan
-      if(this instanceof WolfMan) {
-        push();
-        fill("blue");
-        noStroke();
-        let pointBehind = p5.Vector.sub(this.pos, this.vel.copy().setMag(40));
-        ellipse(pointBehind.x, pointBehind.y, 8, 8);
-        pop();
-      }
+     
     }
     
 
@@ -158,13 +190,6 @@ class Character {
       return createVector(0, 0);
     }
 
-    separateWolf(obstacles) {
-      let separateForce = Behavior.separate(this.distanceSeparation,this,wolves);
-      let avoidForce = Behavior.avoid(this,obstacles, false);
-      avoidForce.mult(this.avoidWeight)
-      separateForce.mult(this.separateWeight);
-      this.applyForce(separateForce);
-      this.applyForce(avoidForce)
-   }
+    
   }
   
