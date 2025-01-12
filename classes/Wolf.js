@@ -11,7 +11,6 @@ class Wolf extends Character {
       this.delayMinBetweenBullets = tempsMinEntreTirsEnMillisecondes;
    }
 
-   
    addBullet(time) {
       // si le temps écoulé depuis le dernier tir est > temps max alors on tire
       var tempEcoule=0;
@@ -22,7 +21,8 @@ class Wolf extends Character {
       }
       
       if((this.lastBulletTime === undefined) || (tempEcoule> this.delayMinBetweenBullets)) {
-         this.bullets.push(new Bullet(this));
+         let bullet = new Bullet(this);
+         this.bullets.push(bullet);
          // on mémorise le dernier temps.
          this.lastBulletTime = time;
       }

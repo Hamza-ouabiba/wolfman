@@ -1,6 +1,6 @@
 class Bullet extends Character {
     constructor(char) {
-        super(char.pos.x, char.pos.y, "red", "bullet");
+        super(char.pos.x, char.pos.y, "lightgreen", "bullet");
         this.xx = char.pos.x;
         this.yy = char.pos.y;
     }
@@ -19,6 +19,5 @@ class Bullet extends Character {
         let seekForce = Behavior.seek(this, target.pos);
         seekForce.mult(this.seekWeight);
         this.applyForce(seekForce);
-        this.update();
     }
 }

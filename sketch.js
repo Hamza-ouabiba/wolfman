@@ -9,8 +9,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   // creation des wolves  :
-  wolves.push(new Wolf(random(width),random(height),"red","wolf 1",0,1,700))
-  wolves.push(new Wolf(random(width),random(height),"red","wolf 2",0,1,700))
   wolves.push(new Wolf(random(width),random(height),"red","wolf 3",0,1,700))
   // creation du wolfman : 
   wolfMan = new WolfMan(random(width),random(height),"blue","wolfman");
@@ -47,7 +45,7 @@ function draw() {
     switch(mode) {
       case "snake": 
         {
-         
+          w.bullets = [];
           if(index === 0) {
             w.applyBehaviors(Behavior.seek,wolfMan.pos);
           } else {
@@ -60,7 +58,7 @@ function draw() {
         w.applyBehaviors(Behavior.seek,wolfMan.pos);
       };break;
       case "leader": {
-      
+        w.bullets = [];
         w.applyBehaviors(Behavior.seek,behindTarget);
       };break;
       case "enemy": {
@@ -75,6 +73,7 @@ function draw() {
           let b = w.bullets[i];
           b.show();
           b.move(enemy);
+          b.applyBehaviors();
           // on l'enlève et on diminue le vie de l'ennemie
           if(b.hit(enemy))
           {
@@ -91,6 +90,7 @@ function draw() {
         if(enemy.health <= 0) {
           mode = "normal";
           enemy = null;
+          w.bullets = [];
           break;
         }
         w.vel = p5.Vector.sub(enemy.pos,w.pos).normalize().mult(0);

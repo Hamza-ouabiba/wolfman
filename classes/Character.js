@@ -80,7 +80,6 @@ class Character {
         // verifier si le wolf est dans la zone devant le leader
         let distance = this.pos.dist(pointAuBoutDeAhead);
         if(distance < wolfMan.sightRadius) {
-          console.log("oui flee")
           let fleeForce = Behavior.flee(this,wolfMan.pos);
           fleeForce.mult(this.fleeWeight);
           this.applyForce(fleeForce);
@@ -94,11 +93,7 @@ class Character {
        
       }
 
-      if(this instanceof Wolf && mode === "enemy") {
-          // je vois si le tableau des bullets n'est pas vide: 
-          // si c'est le cas je tire
-        
-      }
+      
       this.applyForce(boundariesForce);
       this.applyForce(avoidForce);
       this.applyForce(separateForce);
@@ -118,15 +113,7 @@ class Character {
     // On dessine le véhicule
     show() {
 
-      // si un missile on dessine un trait : 
-      if(this instanceof Bullet) {
-        push();
-        stroke("red");
-        strokeWeight(4);
-        point(this.pos.x,this.pos.y);
-        pop();
-        return;
-      }
+    
       stroke(255);
       strokeWeight(2);
   
