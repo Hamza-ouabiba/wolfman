@@ -63,7 +63,9 @@ class Character {
         let seekForce = behavior(this,target,true);
         seekForce.mult(this.seekWeight);
         this.applyForce(seekForce);
-      }
+      } 
+
+   
 
       // le comportement leader : 
       // on applique le flee si on est dans la zone devant le leader 
@@ -91,9 +93,12 @@ class Character {
         pop();
        
       }
-      
 
-     
+      if(this instanceof Wolf && mode === "enemy") {
+          // je vois si le tableau des bullets n'est pas vide: 
+          // si c'est le cas je tire
+        
+      }
       this.applyForce(boundariesForce);
       this.applyForce(avoidForce);
       this.applyForce(separateForce);
@@ -112,6 +117,16 @@ class Character {
   
     // On dessine le véhicule
     show() {
+
+      // si un missile on dessine un trait : 
+      if(this instanceof Bullet) {
+        push();
+        stroke("red");
+        strokeWeight(4);
+        point(this.pos.x,this.pos.y);
+        pop();
+        return;
+      }
       stroke(255);
       strokeWeight(2);
   
@@ -153,7 +168,6 @@ class Character {
       const xBordDroite = bx + bw - d;
       const yBordHaut = by + d;
       const yBordBas = by + bh - d;
-      
 
       push();
 

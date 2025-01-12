@@ -183,5 +183,4 @@ class Behavior {
     return this.pursue(target).mult(-1);
   }
 
-  
 }
