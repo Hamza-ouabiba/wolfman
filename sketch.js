@@ -1,8 +1,11 @@
 let game;
-
+let gameOver = false;
 function preload() {
-  sapinImage = loadImage('assets/sapin.jpg');
+  sapinImage = loadImage('assets/saping.png');
   wolfImage = loadImage('assets/wolf.jpg');
+  wolfManImage = loadImage('assets/wolfman.png');
+  principalImage = loadImage('assets/principal.png');
+  pixelFont = loadFont('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.ttf'); // You can replace with your font
 }
 
 function setup() {
@@ -12,24 +15,69 @@ function setup() {
   // Initialize game
   game = new Game();
   game.addWolf(new Wolf(random(width), random(height), "red", "wolf 3", 0, 1, 700, wolfImage));
-  game.wolfMan = new WolfMan(random(width), random(height), "blue", "wolfman");
-  game.addObstacle(new Obstacle(width / 2, height / 2, 100, "green"));
+  game.wolfMan = new WolfMan(random(width), random(height), "blue", "wolfman",wolfManImage);
+  // deployer les obstacles
+  // sans repetition
+  const obstaclePositions = [
+    { x: 100, y: 150 },
+    { x: 300, y: 200 },
+    { x: 500, y: 350 },
+    { x: 700, y: 100 },
+    { x: 900, y: 400 },
+    { x: 150, y: 500 },
+    { x: 350, y: 600 },
+    { x: 550, y: 250 },
+    { x: 750, y: 350 },
+    { x: 950, y: 150 },
+    { x: 200, y: 300 },
+    { x: 400, y: 450 },
+    { x: 800, y: 200 },
+    { x: 250, y: 400 },
+    { x: 650, y: 600 },
+    { x: 1250, y: 250 },
+    { x: 1050, y: 350 },
+    { x: 1090, y: 550 },
+];
+
+// Ajouter des obstacles au jeu en fonction des positions codées en dur
+obstaclePositions.forEach((pos) => {
+    game.addObstacle(new Obstacle(pos.x, pos.y, 70, "green", sapinImage));
+});
 }
 
 function draw() {
-  background("black");
+  if (gameOver) {
+    displayGameOver();
+    return;
+  }
+
+  background("white");
   fill("red");
   stroke("white");
 
   game.drawEntities();
 }
-
-function mousePressed() {
-  game.addObstacle(new Obstacle(mouseX, mouseY, 140, "green", sapinImage));
+// display the game over screen
+function displayGameOver() {
+  fill(255, 0, 0); // Red color
+  textAlign(CENTER, CENTER);
+  textSize(64); // Large font size for Game Over text
+  text("GAME OVER", width / 2, height / 2 - 50);
+  textSize(32); // Smaller font for instructions
+  text("Press R to Restart", width / 2, height / 2 + 50);
 }
+
+// function mousePressed() {
+//   game.addObstacle(new Obstacle(mouseX, mouseY, 140, "green", sapinImage));
+// }
+
 
 function keyPressed() {
   switch (key) {
+    case 'r':
+      setup();
+      gameOver = false;
+      break;
     case 'd':
       Character.debug = !Character.debug;
       break;
@@ -47,7 +95,7 @@ function keyPressed() {
       break;
     case 'e':
       game.mode = 'enemy';
-      game.enemy = new Principal(random(width), random(height), "yellow", "principal");
+      game.enemy = new Principal(random(width), random(height), "yellow", "principal",principalImage);
       break;
   }
 }

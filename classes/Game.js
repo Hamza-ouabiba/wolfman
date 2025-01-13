@@ -75,7 +75,8 @@ class Game {
       
           if (this.enemy.hit(this.wolfMan)) {
             console.log("wolfMan has been hit!");
-            this.resetMode();
+            gameOver = true;
+           
             return;
           }
       
@@ -95,7 +96,8 @@ class Game {
       
         wolf.vel = p5.Vector.sub(this.enemy.pos, wolf.pos).normalize().mult(0);
     }
-      
+
+    
     resetMode() {
       console.log("Resetting mode...");
       this.mode = "normal";

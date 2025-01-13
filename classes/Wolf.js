@@ -1,6 +1,6 @@
 class Wolf extends Character {
-   constructor(x,y,color,name,angle,vitesse,tempsMinEntreTirsEnMillisecondes) {
-      super(x,y,color,name)
+   constructor(x,y,color,name,angle,vitesse,tempsMinEntreTirsEnMillisecondes,image) {
+      super(x,y,color,name,image)
       this.bullets = [];
       this.x = x;
       this.y = y;

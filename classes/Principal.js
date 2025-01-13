@@ -1,7 +1,7 @@
 class Principal extends Character {
 
-    constructor(x,y,color,name) {
-        super(x,y,color,name)
+    constructor(x,y,color,name,image) {
+        super(x,y,color,name,image)
         this.health = 100;
         this.maxHealth = 100;
     }

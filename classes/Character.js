@@ -10,7 +10,7 @@ class Character {
       this.seekWeight =1
       this.fleeWeight = 6
       // rayon du véhicule
-      this.r = 10;
+      this.r = 24;
       this.color = color;
       this.rayonZoneDeFreinage = 150;
       this.distanceSeparation = this.r ;
@@ -79,15 +79,15 @@ class Character {
       // mais on calcule d'abbord la distance 
       if(this instanceof Wolf && game.mode === "leader") {
         // on projette un ahead devant le leader
-        let ahead = wolfMan.vel.copy();
+        let ahead = game.wolfMan.vel.copy();
         ahead.normalize();
         ahead.mult(40);
-        let pointAuBoutDeAhead = wolfMan.pos.copy().add(ahead);
+        let pointAuBoutDeAhead = game.wolfMan.pos.copy().add(ahead);
         // verifier si le wolf est dans la zone devant le leader
         let distance = this.pos.dist(pointAuBoutDeAhead);
-        if(distance < wolfMan.sightRadius) {
+        if(distance < game.wolfMan.sightRadius) {
         console.log("hna")
-          let fleeForce = Behavior.flee(this,wolfMan.pos);
+          let fleeForce = Behavior.flee(this,game.wolfMan.pos);
           fleeForce.mult(this.fleeWeight);
           this.applyForce(fleeForce);
         }
@@ -95,7 +95,7 @@ class Character {
         push();
         noFill();
         stroke("red");
-        circle(pointAuBoutDeAhead.x,pointAuBoutDeAhead.y,wolfMan.sightRadius * 2);
+        circle(pointAuBoutDeAhead.x,pointAuBoutDeAhead.y,game.wolfMan.sightRadius * 2);
         pop();
        
       }
@@ -128,10 +128,14 @@ class Character {
   
       push();
       
-      translate(this.pos.x, this.pos.y);
-      rotate(this.vel.heading());
-  
-      triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
+      if(this.image) {
+        image(this.image,this.pos.x - this.r, this.pos.y - this.r, this.r*2, this.r*2);
+      } else {
+        translate(this.pos.x, this.pos.y);
+        rotate(this.vel.heading());
+    
+        triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
+      }
       
       pop();
   
@@ -163,16 +167,18 @@ class Character {
       const yBordHaut = by + d;
       const yBordBas = by + bh - d;
 
-      push();
+      if(Character.debug) {
+        push();
 
-      noFill();
-      stroke("white");
-      rect(bx, by, bw, bh);
+        noFill();
+        stroke("white");
+        rect(bx, by, bw, bh);
 
-      stroke("red");
-      rect(bx + d, by + d, bw - 2 * d, bh - 2 * d);
+        stroke("red");
+        rect(bx + d, by + d, bw - 2 * d, bh - 2 * d);
 
-      pop();
+        pop();
+      }
 
       if (this.pos.x < xBordGauche) {
         // 

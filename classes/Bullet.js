@@ -1,6 +1,7 @@
 class Bullet extends Character {
     constructor(char) {
-        super(char.pos.x, char.pos.y, "lightgreen", "bullet");
+        let fireball =  loadImage("assets/fireball.png");
+        super(char.pos.x, char.pos.y, "lightgreen", "bullet",fireball);
         this.xx = char.pos.x;
         this.yy = char.pos.y;
     }
