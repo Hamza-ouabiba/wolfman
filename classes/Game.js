@@ -90,6 +90,8 @@ class Game {
       
         if (this.enemy.health <= 0) {
           console.log("Enemy has been defeated!");
+          // augmentation du score : 
+          this.wolfMan.score += 10;
           this.resetMode();
           return;
         }
@@ -168,5 +170,14 @@ class Game {
           // idem pour la force max
           this.wolves[i].maxForce = random(0.1, 2);
         }
-      }
+    }
+
+    affichageScore() {
+        push();
+        fill('yellow'); // Couleur du texte
+        textSize(32); // Taille du texte
+        textAlign(RIGHT, TOP); // Alignement du texte
+        text(`Score: ${this.wolfMan.score}`, width - 50, 15); // Afficher le score en haut à droite
+        pop();
+    }
 }

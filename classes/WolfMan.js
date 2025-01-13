@@ -2,6 +2,7 @@ class WolfMan extends Character {
     constructor(x,y,color,name,image) {
         super(x,y,color,name,image);
         this.sightRadius = 40;
+        this.score = 0;
     }
     // le point va etre l'inverse de la direction du wolfMan
     PointBehind() {
@@ -20,4 +21,6 @@ class WolfMan extends Character {
         }
         return behind;
     }
+
+   
 }

@@ -88,6 +88,7 @@ function draw() {
   background("black");
   fill("red");
   stroke("white");
+  game.affichageScore();
   game.drawEntities();
 }
 // display the game over screen
