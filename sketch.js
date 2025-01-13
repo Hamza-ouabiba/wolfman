@@ -35,10 +35,13 @@ function setup() {
   game.creerUnSlider("Poids boundaries", game.wolves, 0, 40, 10, 1, 10, posYSliderDeDepart+30,"boundariesWeight");
   game.creerUnSlider("Rayon des loups", game.wolves, 4, 40, 6, 1, 10, posYSliderDeDepart+60,"r");
   game.creerUnSlider("max speed", game.wolves, 0, 40, 3, 1, 10, posYSliderDeDepart+90,"maxSpeed");
-  game.creerSliderNbVehicules(10,  posYSliderDeDepart+120, "Nombre de loups", 1, 200, 1, 1);  // deployer les obstacles
+  game.creerUnSlider("max speed wolfMan ", game.wolfMan, 0, 40, 3, 1, 10, posYSliderDeDepart+120,"maxSpeed");
+  game.creerUnSlider("max Force wolfMan ", game.wolfMan, 0, 40, 3, 1, 10, posYSliderDeDepart+150,"maxForce");
+  // se baser juste sur le w qui crée un nouveau loup
+  //game.creerSliderNbLoups(10,  posYSliderDeDepart+120, "Nombre de loups", 1, 200, 1, 1);  // deployer les obstacles
   // sans repetition
   const obstaclePositions = [
-    { x: 100, y: 150 },
+    { x: 150, y: 150 },
     { x: 300, y: 200 },
     { x: 500, y: 350 },
     { x: 700, y: 100 },
@@ -56,6 +59,7 @@ function setup() {
     { x: 1250, y: 250 },
     { x: 1050, y: 350 },
     { x: 1090, y: 550 },
+    { x: 1300, y: 550 },
 ];
 
 // Ajouter des obstacles au jeu en fonction des positions codées en dur
@@ -70,19 +74,18 @@ function draw() {
     return;
   }
 
-  background("black");
+  background("white");
   fill("red");
   stroke("white");
   game.affichageScore();
   game.drawEntities();
 }
-// display the game over screen
 function displayGameOver() {
-  fill(255, 0, 0); // Red color
+  fill(255, 0, 0); 
   textAlign(CENTER, CENTER);
-  textSize(64); // Large font size for Game Over text
+  textSize(64); 
   text("GAME OVER", width / 2, height / 2 - 50);
-  textSize(32); // Smaller font for instructions
+  textSize(32);
   text("Press R to Restart", width / 2, height / 2 + 50);
 }
 
@@ -95,6 +98,7 @@ function keyPressed() {
   switch (key.toLowerCase()) {
     case 'r':
       setup();
+      
       gameOver = false;
       break;
     case 'd':

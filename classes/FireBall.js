@@ -1,9 +1,9 @@
-class Bullet extends Character {
-    constructor(char) {
+class FireBall extends Character {
+    constructor(wolf) {
         let fireball =  loadImage("assets/fireball.png");
-        super(char.pos.x, char.pos.y, "lightgreen", "bullet",fireball);
-        this.xx = char.pos.x;
-        this.yy = char.pos.y;
+        super(wolf.pos.x, wolf.pos.y, "lightgreen", "bullet",fireball);
+        this.xx = wolf.pos.x;
+        this.yy = wolf.pos.y;
     }
     // voir si le missile a touché la cible
     // si oui on retourne true

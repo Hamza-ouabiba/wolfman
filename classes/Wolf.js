@@ -22,7 +22,7 @@ class Wolf extends Character {
       }
       
       if((this.lastBulletTime === undefined) || (tempEcoule> this.delayMinBetweenBullets)) {
-         let bullet = new Bullet(this);
+         let bullet = new FireBall(this);
          this.bullets.push(bullet);
          // on mémorise le dernier temps.
          this.lastBulletTime = time;
