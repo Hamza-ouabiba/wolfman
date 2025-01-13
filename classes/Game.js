@@ -80,7 +80,7 @@ class Game {
           }
       
           if (fireball.hit(this.enemy)) {
-            wolf.removeBullet(bullet);
+            wolf.removeFireBall(fireball);
             this.enemy.health -= 20;
           }
       

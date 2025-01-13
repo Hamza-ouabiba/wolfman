@@ -28,9 +28,9 @@ class Wolf extends Character {
       }
     }
  
-    removeBullet(fireBall) {
+    removeFireBall(fireBall) {
          let position = this.fireballs.indexOf(fireBall);
-         this.bullets.splice(position, 1);
+         this.fireballs.splice(position, 1);
    }
 }
   
