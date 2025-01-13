@@ -12,15 +12,6 @@ function setup() {
   console.log("Setup started.");
   createCanvas(windowWidth, windowHeight);
 
-  // lui afficher en bas les différentes touches du jeu
-  // c'est a dire si e est appuyé alors on affiche le principal
-  // si s est appuyé alors on affiche le snake
-  // si l est appuyé alors on affiche le leader
-  // si n est appuyé alors on affiche le normal
-  // si w est appuyé alors on ajoute un wolf
-  // juste pour le fun
-
-
   // creation d'un boutton : 
   // le placer en bas a gauche un peu grande taille: :
   // le dessiner en Jaune avec un font en pixelFont
@@ -41,9 +32,9 @@ function setup() {
   game.addWolf(new Wolf(random(width), random(height), "red", "wolf 3", 0, 1, 700));
   game.wolfMan = new WolfMan(random(width), random(height), "blue", "wolfman",wolfManImage);
   game.creerUnSlider("Poids séparation loups", game.wolves, 0, 15, 3, 0.1, 10, posYSliderDeDepart,"separateWeight");
-  game.creerUnSlider("Poids boundaries", game.wolves, 0, height, 10, 1, 10, posYSliderDeDepart+30,"boundariesWeight");
+  game.creerUnSlider("Poids boundaries", game.wolves, 0, 40, 10, 1, 10, posYSliderDeDepart+30,"boundariesWeight");
   game.creerUnSlider("Rayon des loups", game.wolves, 4, 40, 6, 1, 10, posYSliderDeDepart+60,"r");
-  game.creerUnSlider("speed", game.wolves, 4, 40, 6, 1, 10, posYSliderDeDepart+90,"maxSpeed");
+  game.creerUnSlider("max speed", game.wolves, 0, 40, 3, 1, 10, posYSliderDeDepart+90,"maxSpeed");
   game.creerSliderNbVehicules(10,  posYSliderDeDepart+120, "Nombre de loups", 1, 200, 1, 1);  // deployer les obstacles
   // sans repetition
   const obstaclePositions = [
