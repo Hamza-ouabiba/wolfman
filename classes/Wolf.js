@@ -1,6 +1,7 @@
 class Wolf extends Character {
-   constructor(x,y,color,name,angle,vitesse,tempsMinEntreTirsEnMillisecondes,image) {
-      super(x,y,color,name,image)
+   constructor(x,y,color,name,angle,vitesse,tempsMinEntreTirsEnMillisecondes) {
+      let wolf =  loadImage("assets/wolf.jpg");
+      super(x,y,color,name,wolf)
       this.bullets = [];
       this.x = x;
       this.y = y;

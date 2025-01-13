@@ -104,4 +104,69 @@ class Game {
       this.enemy = null;
       this.wolves.forEach(wolf => (wolf.bullets = []));
     }
+
+
+    creerUnSlider(label, tab, min, max, val, step, posX, posY, propriete) {
+        let slider = createSlider(min, max, val, step);
+
+
+        let labelP = createP(label);
+        labelP.position(posX, posY);
+        labelP.style('color', 'white');
+      
+        slider.position(posX + 150, posY + 17);
+      
+        let valueSpan = createSpan(slider.value());
+        valueSpan.position(posX + 300, posY+17);
+        valueSpan.style('color', 'white');
+        valueSpan.html(slider.value());
+      
+        slider.input(() => {
+          valueSpan.html(slider.value());
+          tab.forEach(w => {
+            w[propriete] = slider.value();
+          });
+        });
+      
+        return slider;
+      }
+      
+    creerSliderNbVehicules(x, y, textLabel, min, max, value, step) {
+        // On cree un slider pour changer la vitesse max des vehicules
+        // on ajoute un label pour le slider
+        let label = createP(textLabel + " : ");
+        // couleur blanche
+        label.style('color', 'white');
+        // on le positionne avant le slider
+        let labelX = x;
+        let labelY = y;
+        label.position(labelX, labelY);
+        let slider = createSlider(min, max, value, step);
+        slider.position(labelX + 150, labelY + 18);
+        // On affiche la valeur du slider à droite du slider
+        let sliderValue = createP(slider.value());
+        // couleur blanche
+        sliderValue.style('color', 'white');
+        sliderValue.position(labelX + 300, labelY+2);
+      
+        slider.input(() => {
+          // on met à jour la valeur du label
+          sliderValue.html(slider.value());
+          
+          // On remet à 0 le tableau des vehicules
+          this.wolves = [];
+          //... et on en recrée
+          this.creerLoups(slider.value());
+        });
+     }
+
+    creerLoups(nbVehicules) {
+        for (let i = 0; i < nbVehicules; i++) {
+          this.wolves.push(new Wolf(random(width), random(height), "red", "wolf 3", 0, 1, 700));
+          // on met une valeur randoml pour la vitesse max
+          this.wolves[i].maxSpeed = random(0.5, 6);
+          // idem pour la force max
+          this.wolves[i].maxForce = random(0.1, 2);
+        }
+      }
 }
