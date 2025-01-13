@@ -5,7 +5,6 @@ function preload() {
   sapinImage = loadImage('assets/saping.png');
   wolfManImage = loadImage('assets/wolfman.png');
   principalImage = loadImage('assets/principal.png');
-  pixelFont = loadFont('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.ttf'); // You can replace with your font
 }
 
 function setup() {
@@ -19,7 +18,6 @@ function setup() {
   button.position(10, height - 50);
   button.size(100, 50);
   button.style('background-color', 'yellow');
-  button.style('font-family', 'pixelFont');
   // les instructions c'est que le wolves suivent le wolfMan
   // et lorsque on clique sur e 
   button.mousePressed(() => {

@@ -64,13 +64,13 @@ class Game {
         if (!this.enemy) return; 
       
         wolf.vel = p5.Vector.sub(this.enemy.pos, wolf.pos).normalize().mult(0);
-        wolf.addBullet(Date.now());
+        wolf.addFireBall(Date.now());
       
-        for (let i = 0; i < wolf.bullets.length; i++) {
-          let bullet = wolf.bullets[i];
-          bullet.show();
-          bullet.move(this.enemy);
-          bullet.applyBehaviors();
+        for (let i = 0; i < wolf.fireballs.length; i++) {
+          let fireball = wolf.fireballs[i];
+          fireball.show();
+          fireball.move(this.enemy);
+          fireball.applyBehaviors();
       
           if (this.enemy.hit(this.wolfMan)) {
             console.log("wolfMan has been hit!");
@@ -79,12 +79,12 @@ class Game {
             return;
           }
       
-          if (bullet.hit(this.enemy)) {
+          if (fireball.hit(this.enemy)) {
             wolf.removeBullet(bullet);
             this.enemy.health -= 20;
           }
       
-          bullet.update();
+          fireball.update();
         }
       
         if (this.enemy.health <= 0) {
