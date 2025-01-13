@@ -1,4 +1,3 @@
-
 let game;
 let gameOver = false;
 function preload() {

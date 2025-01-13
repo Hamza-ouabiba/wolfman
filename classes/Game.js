@@ -1,4 +1,3 @@
-// --- Game Class ---
 class Game {
     constructor() {
       this.wolves = [];
