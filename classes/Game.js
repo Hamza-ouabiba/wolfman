@@ -180,4 +180,18 @@ class Game {
         text(`Score: ${this.wolfMan.score}`, width - 50, 15); // Afficher le score en haut à droite
         pop();
     }
+
+    instructions() {
+        return alert("Instructions\n\n" +
+            "- E - Afficher un ennemi en tirant dessus par des fireballs\n" +
+            "- S - Afficher le mode Snake\n" +
+            "- L - Afficher le mode Leader\n" +
+            "- N - Afficher le mode Normal\n" +
+            "- W - Ajouter un Wolf \n" +
+            "- R - Appuyez sur 'R' pour redémarrer le jeu\n\n" +
+            "Concept du jeu :\n" +
+            "- Les wolves peuvent tirer des fireballs sur Arthur pour marquer 10 points.\n" +
+            "- Si Arthur vous attrape (wolfMan), vous perdez la partie. \n" + 
+            "- Pour s'échapper il faut jouer avec la souris !!!!");
+    }
 }

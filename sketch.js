@@ -32,14 +32,8 @@ function setup() {
   // les instructions c'est que le wolves suivent le wolfMan
   // et lorsque on clique sur e 
   button.mousePressed(() => {
-    alert("Instructions\n\n" +
-          "- E - Afficher un ennemi en tirant dessus par des fireballs\n" +
-          "- S - Afficher le mode Snake\n" +
-          "- L - Afficher le mode Leader\n" +
-          "- N - Afficher le mode Normal\n" +
-          "- W - Ajouter un Wolf \n" +
-          "- R - Appuyez sur 'R' pour redémarrer le jeu\n"
-   )});
+     game.instructions();
+   });
 
   const posYSliderDeDepart = 3;
   // Initialize game
@@ -129,7 +123,7 @@ function keyPressed() {
       break;
     case 'e':
       game.mode = 'enemy';
-      game.enemy = new Principal(random(width), random(height), "yellow", "principal", principalImage);
+      game.enemy = new Principal(random(width), random(height), "yellow", "Arthur", principalImage);
       break;
   }
 }
