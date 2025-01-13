@@ -15,7 +15,7 @@ class Behavior {
           const dist = p5.Vector.dist(object.pos, target);
     
           if (dist < object.rayonZoneDeFreinage) {
-            desiredSpeedMagnitude = map(dist, d, object.rayonZoneDeFreinage, -3, object.maxSpeed)
+            desiredSpeedMagnitude = map(dist, d, object.rayonZoneDeFreinage, -1, object.maxSpeed)
           }
         }
     

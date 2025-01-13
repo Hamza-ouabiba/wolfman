@@ -7,10 +7,10 @@ class Character {
       this.acc = createVector(0, 0);
       this.maxSpeed = 3;
       this.maxForce = 0.25;
-      this.seekWeight = 0.4
-      this.fleeWeight = 0.4
+      this.seekWeight =1
+      this.fleeWeight = 6
       // rayon du véhicule
-      this.r = 19;
+      this.r = 10;
       this.color = color;
       this.rayonZoneDeFreinage = 150;
       this.distanceSeparation = this.r ;
@@ -22,7 +22,7 @@ class Character {
       // Pour évitement d'obstacle
       this.distanceAhead = 50;
       this.largeurZoneEvitementDevantVaisseau = this.r / 2;
-      this.avoidWeight = 5;
+      this.avoidWeight = 3;
 
       // Paramètres comportement confinement
       this.boundariesX = 0;
@@ -52,12 +52,12 @@ class Character {
       boundariesForce.mult(this.boundariesWeight);
       // pour tous les personnages on applique le comportement de séparation
       // combiner le wolfMan et les wolves dans un seul tableau
-      let boids = [wolfMan,...wolves];
+      let boids = [game.wolfMan,...game.wolves];
       let separateForce = Behavior.separate(this.distanceSeparation,this,boids);
       separateForce.mult(this.separateWeight);
 
       // pour tous les personnages on applique le comportement d'évitement d'obstacle
-      let avoidForce = Behavior.avoid(this,obstacles);
+      let avoidForce = Behavior.avoid(this,game.obstacles);
       avoidForce.mult(this.avoidWeight)
       // pour le wolf et le wolfMan on applique le comportement de arrive
       if(this instanceof Wolf || this instanceof WolfMan) {
@@ -66,13 +66,18 @@ class Character {
         this.applyForce(seekForce);
       } 
 
-   
+      if(this instanceof Principal) {
+        console.log("hna")
+        let seekForce = behavior(this,target,false);
+        seekForce.mult(this.seekWeight);
+        this.applyForce(seekForce);
+      }
       
       // le comportement leader : 
       // on applique le flee si on est dans la zone devant le leader 
       // sinon on applique le seek
       // mais on calcule d'abbord la distance 
-      if(this instanceof Wolf && mode === "leader") {
+      if(this instanceof Wolf && game.mode === "leader") {
         // on projette un ahead devant le leader
         let ahead = wolfMan.vel.copy();
         ahead.normalize();
@@ -81,6 +86,7 @@ class Character {
         // verifier si le wolf est dans la zone devant le leader
         let distance = this.pos.dist(pointAuBoutDeAhead);
         if(distance < wolfMan.sightRadius) {
+        console.log("hna")
           let fleeForce = Behavior.flee(this,wolfMan.pos);
           fleeForce.mult(this.fleeWeight);
           this.applyForce(fleeForce);

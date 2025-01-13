@@ -16,8 +16,9 @@ class Bullet extends Character {
     }
 
     move(target) {
-        let seekForce = Behavior.seek(this, target.pos);
-        seekForce.mult(this.seekWeight);
-        this.applyForce(seekForce);
+        console.log("target = " + target);
+            let seekForce = Behavior.seek(this, target.pos);
+            seekForce.mult(this.seekWeight);
+            this.applyForce(seekForce);
     }
 }

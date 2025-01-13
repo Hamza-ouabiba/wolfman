@@ -8,7 +8,7 @@ class WolfMan extends Character {
         let tv = this.vel.copy();
         tv.mult(-1);
         tv.normalize();
-        tv.mult(70);
+        tv.mult(50);
         let behind = this.pos.copy();
         behind.add(tv);
         // maintenant on dessine le point

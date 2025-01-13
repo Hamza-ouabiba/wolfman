@@ -32,7 +32,7 @@ class Principal extends Character {
 
     // tester si le principal a touche le wolfMan : 
     hit(target) {
-        let d = dist(this.pos.x, this.pos.y, wolfMan.pos.x, wolfMan.pos.y);
+        let d = dist(this.pos.x, this.pos.y, target.pos.x, target.pos.y);
         if(d < this.r + target.r) {
             return true;
         }
