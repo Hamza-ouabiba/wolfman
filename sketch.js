@@ -1,110 +1,161 @@
 let wolves = []
 let obstacles = [];
 let wolfMan;
-let principal;
 let mode = 'normal'
 let enemy;
+let sapinImage;
+function preload() {
+  // On charge une image de poisson
+  sapinImage = loadImage('assets/sapin.jpg');
+  wolfImage = loadImage('assets/wolf.jpg');
+}
+
 function setup() {
   console.log("setup");
   createCanvas(windowWidth, windowHeight);
 
   // creation des wolves  :
-  wolves.push(new Wolf(random(width),random(height),"red","wolf 3",0,1,700))
+  wolves.push(new Wolf(random(width),random(height),"red","wolf 3",0,1,700, wolfImage));
   // creation du wolfman : 
   wolfMan = new WolfMan(random(width),random(height),"blue","wolfman");
   // creation du joueur principal : 
   //creation des obstacles : 
-  obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
+  
+  obstacles.push(new Obstacle(width / 2, height / 2, 50, "green",sapinImage));
+  obstacles.push(new Obstacle(width / 2, height / 2, 50, "green",sapinImage));
 }
 
+
 function draw() {
-  background("black");
+  background("white");
   fill("red");
   stroke("white");
-  let rayonDeDetection = 70;
-  // // dessin de l'ennemie : 
-  
-  wolfMan.applyBehaviors(Behavior.seek,createVector(mouseX,mouseY))
-  wolfMan.update();
-  wolfMan.show();
-  // ce point va etre le target des wolves : 
-  let behindTarget = wolfMan.PointBehind();
-  // dessin des obstacles:  
-  obstacles.forEach(o => {
-    o.show();
-  })
- 
-  if(Character.debug) {
-     // dessin de la souris
-      fill("white")
-      circle(mouseX,mouseY,30)
-  }
-  
-  // dessin des wolves qui suivent le wolfman :
-  wolves.forEach((w,index) => {
-    switch(mode) {
-      case "snake": 
-        {
-          w.bullets = [];
-          if(index === 0) {
-            w.applyBehaviors(Behavior.seek,wolfMan.pos);
-          } else {
-            w.applyBehaviors(Behavior.seek,wolves[index - 1].pos);
-          }
 
-        };break;
-      case "normal": {
-       
-        w.applyBehaviors(Behavior.seek,wolfMan.pos);
-      };break;
-      case "leader": {
-        w.bullets = [];
-        w.applyBehaviors(Behavior.seek,behindTarget);
-      };break;
-      case "enemy": {
-        enemy.update();
-        enemy.drawPri();
-        enemy.applyBehaviors();
-        // et tirent sur lui
-        // mettre a jour la direction du wolf en fonction de la position du principal
-        // juste que le wolf va regarder le principal mais en il est arrete
-        w.addBullet(Date.now());
-        for(let i = 0; i < w.bullets.length; i++) {
-          let b = w.bullets[i];
-          b.show();
-          b.move(enemy);
-          b.applyBehaviors();
-          // on l'enlève et on diminue le vie de l'ennemie
-          if(b.hit(enemy))
-          {
-            w.removeBullet(b);
-            enemy.health -= 20;
-          } else {
-            // il faut que l'enemie flee les bullets
-            let fleeForce = Behavior.flee(enemy,b.pos);
-            fleeForce.mult(0.1);
-            enemy.applyForce(fleeForce);
-          }
-          b.update();
-        }
-        if(enemy.health <= 0) {
-          mode = "normal";
-          enemy = null;
-          w.bullets = [];
-          break;
-        }
-        w.vel = p5.Vector.sub(enemy.pos,w.pos).normalize().mult(0);
-      };break;
+  // Dessin de wolfMan et des obstacles
+  drawWolfMan();
+  drawObstacles();
+
+  if (Character.debug) {
+    drawMouseDebug();
+  }
+
+  // Dessin des loups en fonction du mode
+  wolves.forEach((w, index) => {
+    switch (mode) {
+      case "snake":
+        handleSnakeMode(w, index);
+        break;
+      case "normal":
+        handleNormalMode(w);
+        break;
+      case "leader":
+        handleLeaderMode(w);
+        break;
+      case "enemy":
+        handleEnemyMode(w);
+        break;
     }
     w.show();
     w.update();
-  })
-
+  });
 }
+
+// --- Fonction pour dessiner wolfMan ---
+function drawWolfMan() {
+  wolfMan.applyBehaviors(Behavior.seek, createVector(mouseX, mouseY));
+  wolfMan.update();
+  wolfMan.show();
+}
+
+// --- Fonction pour dessiner les obstacles ---
+function drawObstacles() {
+  obstacles.forEach((o) => {
+    o.show();
+  });
+}
+
+// --- Fonction pour dessiner la souris en mode debug ---
+function drawMouseDebug() {
+  fill("white");
+  circle(mouseX, mouseY, 30);
+}
+
+// --- Mode "snake" ---
+function handleSnakeMode(w, index) {
+  w.bullets = [];
+  if (index === 0) {
+    w.applyBehaviors(Behavior.seek, wolfMan.pos);
+  } else {
+    w.applyBehaviors(Behavior.seek, wolves[index - 1].pos);
+  }
+}
+
+// --- Mode "normal" ---
+function handleNormalMode(w) {
+  w.applyBehaviors(Behavior.seek, wolfMan.pos);
+}
+
+// --- Mode "leader" ---
+function handleLeaderMode(w) {
+  const behindTarget = wolfMan.PointBehind();
+  w.applyBehaviors(Behavior.seek, behindTarget);
+}
+
+// --- Mode "enemy" ---
+function handleEnemyMode(w) {
+  let isCatched = false;
+
+  // Dessin et mise à jour de l'ennemi
+  enemy.drawPri();
+  enemy.applyBehaviors();
+
+  // Ajout de balles et gestion des interactions
+  w.addBullet(Date.now());
+  for (let i = 0; i < w.bullets.length; i++) {
+    let b = w.bullets[i];
+    b.show();
+    b.move(enemy);
+    b.applyBehaviors();
+
+    if (enemy.hit(wolfMan)) {
+      mode = "normal";
+      enemy = null;
+      w.bullets = [];
+      isCatched = true;
+      console.log("wolfMan a été touché");
+      break;
+    }
+
+    if (b.hit(enemy)) {
+      w.removeBullet(b);
+      enemy.health -= 20;
+    } else {
+      let fleeForce = Behavior.flee(enemy, b.pos);
+      let seekForce = Behavior.seek(enemy, wolfMan.pos);
+      fleeForce.mult(enemy.seekWeight);
+      seekForce.mult(enemy.seekWeight);
+      enemy.applyForce(fleeForce);
+      enemy.applyForce(seekForce);
+    }
+    b.update();
+  }
+
+  if (isCatched) return;
+
+  if (enemy.health <= 0) {
+    mode = "normal";
+    enemy = null;
+    w.bullets = [];
+    return;
+  }
+  enemy.update();
+  w.vel = p5.Vector.sub(enemy.pos, w.pos).normalize().mult(0);
+}
+
 
 // ajout d'un obstacle a la position de la souris
 function mousePressed() {
-   obstacles.push(new Obstacle(mouseX,mouseY,50,"green"))
+   obstacles.push(new Obstacle(mouseX,mouseY,140,"green",sapinImage))
 }
 
 function keyPressed() {

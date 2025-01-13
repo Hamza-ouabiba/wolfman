@@ -1,19 +1,20 @@
 class Character {
-    constructor(x, y,color,name,behaviors) {
+    constructor(x, y,color,name,image) {
       this.name = name;
+      this.image = image;
       this.pos = createVector(x, y);
       this.vel = createVector(0, 0);
       this.acc = createVector(0, 0);
-      this.maxSpeed = 6;
+      this.maxSpeed = 3;
       this.maxForce = 0.25;
-      this.seekWeight = 1
-      this.fleeWeight = 10
+      this.seekWeight = 0.4
+      this.fleeWeight = 0.4
       // rayon du véhicule
       this.r = 19;
       this.color = color;
       this.rayonZoneDeFreinage = 150;
       this.distanceSeparation = this.r ;
-      this.separateWeight = 7;
+      this.separateWeight = 3;
       // Pour le confinement
       this.boundariesWeight = 10;
 
@@ -21,7 +22,7 @@ class Character {
       // Pour évitement d'obstacle
       this.distanceAhead = 50;
       this.largeurZoneEvitementDevantVaisseau = this.r / 2;
-      this.avoidWeight = 3;
+      this.avoidWeight = 5;
 
       // Paramètres comportement confinement
       this.boundariesX = 0;
@@ -66,7 +67,7 @@ class Character {
       } 
 
    
-
+      
       // le comportement leader : 
       // on applique le flee si on est dans la zone devant le leader 
       // sinon on applique le seek

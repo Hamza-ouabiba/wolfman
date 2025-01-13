@@ -25,6 +25,7 @@ class Behavior {
         return force;
     }
 
+
     static flee(object,target) {
        return this.seek(object,target).mult(-1);
     }
@@ -101,17 +102,17 @@ class Behavior {
     ahead2.add(current.pos);
     ahead3.add(current.pos);
 
-    // if (Character.debug) {
-    //   // on le dessine en rouge
-    //   fill("red");
-    //   circle(ahead.x, ahead.y, 10);
+    if (Character.debug) {
+      // on le dessine en rouge
+        fill("red");
+        circle(ahead.x, ahead.y, 10);
 
-    //   fill("lightblue");
-    //   circle(ahead2.x, ahead2.y, 15);
+        fill("lightblue");
+        circle(ahead2.x, ahead2.y, 15);
 
-    //   fill("pink");
-    //   circle(ahead3.x, ahead3.y, 20);
-    // }
+        fill("pink");
+        circle(ahead3.x, ahead3.y, 20);
+    }
 
     // On cherche l'obstacle le plus proche
     let obstacleLePlusProche = this.getObstacleLePlusProche(current,obstacles);
@@ -142,11 +143,11 @@ class Behavior {
         desiredSpeed = p5.Vector.sub(ahead3, obstacleLePlusProche.pos);
       }
 
-      // if (Character.debug) {
-      //   // On dessine ce vecteur qui part du centre de l'obstacle
-      //   // et va vers le point ahead
-      //   current.drawVector(obstacleLePlusProche.pos, desiredSpeed, "yellow");
-      // }
+      if (Character.debug) {
+        // On dessine ce vecteur qui part du centre de l'obstacle
+        // et va vers le point ahead
+          current.drawVector(obstacleLePlusProche.pos, desiredSpeed, "green");
+      }
 
       // on calcule la force
       // 1 - on met desiredSpeed au maximum
