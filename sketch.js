@@ -2,6 +2,7 @@
 let game;
 let gameOver = false;
 function preload() {
+  bg = loadImage('assets/lake.jpg');
   sapinImage = loadImage('assets/saping.png');
   wolfManImage = loadImage('assets/wolfman.png');
   principalImage = loadImage('assets/principal.png');
@@ -74,7 +75,7 @@ function draw() {
     return;
   }
 
-  background("white");
+  background(bg);
   fill("red");
   stroke("white");
   game.affichageScore();
@@ -98,7 +99,7 @@ function keyPressed() {
   switch (key.toLowerCase()) {
     case 'r':
       setup();
-      
+
       gameOver = false;
       break;
     case 'd':
