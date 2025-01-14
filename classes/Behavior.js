@@ -76,7 +76,7 @@ class Behavior {
     return obstacleLePlusProche;
   }
 
-  static avoid(current,obstacles, considereVehiculesCommeObstacles = false) {
+  static avoid(current,obstacles) {
     let force;
     // On calcule un pointdevant le véhicule courant
     // on l'appelle ahead

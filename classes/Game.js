@@ -165,8 +165,8 @@ class Game {
     //     });
     //  }
 
-    // creerLoups(nbVehicules) {
-    //     for (let i = 0; i < nbVehicules; i++) {
+    // creerLoups(nbLoups) {
+    //     for (let i = 0; i < nbLoups; i++) {
     //       this.wolves.push(new Wolf(random(width), random(height), "red", "wolf 3", 0, 1, 700));
     //     }
     // }

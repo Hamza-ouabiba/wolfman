@@ -22,7 +22,7 @@ function setup() {
   // et lorsque on clique sur e 
   button.mousePressed(() => {
      game.instructions();
-   });
+  });
 
   const posYSliderDeDepart = 3;
   // Initialize game

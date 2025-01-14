@@ -9,7 +9,7 @@ class Character {
       this.maxForce = 0.25;
       this.seekWeight =1
       this.fleeWeight = 6
-      // rayon du véhicule
+      // rayon 
       this.r = 24;
       this.color = color;
       this.rayonZoneDeFreinage = 150;
@@ -117,10 +117,7 @@ class Character {
       this.acc.set(0, 0);
     }
   
-    // On dessine le véhicule
     show() {
-
-    
       stroke(255);
       strokeWeight(2);
   
@@ -136,9 +133,7 @@ class Character {
     
         triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
       }
-      
       pop();
-  
       if(Character.debug) {
         this.drawVelocityVector();
       }
