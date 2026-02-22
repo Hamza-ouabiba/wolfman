@@ -187,8 +187,8 @@ class Game {
         "- W - Ajouter un Wolf \n" +
         "- R - Appuyez sur 'R' pour redémarrer le jeu\n\n" +
         "Concept du jeu :\n" +
-        "- Les wolves peuvent tirer des fireballs sur Nouhatino pour marquer 10 points.\n" +
-        "- Si Nouhatino vous attrape (wolfMan), vous perdez la partie. \n" +
+        "- Les wolves peuvent tirer des fireballs sur Arthur pour marquer 10 points.\n" +
+        "- Si Arthur vous attrape (wolfMan), vous perdez la partie. \n" +
         "- Pour s'échapper il faut jouer avec la souris !!!!"
     );
   }
