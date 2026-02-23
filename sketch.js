@@ -1,7 +1,6 @@
 let game;
 let gameOver = false;
 function preload() {
-  bg = loadImage("assets/lake.jpg");
   sapinImage = loadImage("assets/saping.png");
   wolfManImage = loadImage("assets/wolfman.png");
   principalImage = loadImage("assets/principal.png");
@@ -104,29 +103,16 @@ function setup() {
     "maxForce"
   );
   // se baser juste sur le w qui crée un nouveau loup
-  //game.creerSliderNbLoups(10,  posYSliderDeDepart+120, "Nombre de loups", 1, 200, 1, 1);  // deployer les obstacles
-  // sans repetition
-  const obstaclePositions = [
-    { x: 150, y: 150 },
-    { x: 300, y: 200 },
-    { x: 500, y: 350 },
-    { x: 700, y: 100 },
-    { x: 900, y: 400 },
-    { x: 150, y: 500 },
-    { x: 350, y: 600 },
-    { x: 550, y: 250 },
-    { x: 750, y: 350 },
-    { x: 950, y: 150 },
-    { x: 200, y: 300 },
-    { x: 400, y: 450 },
-    { x: 800, y: 200 },
-    { x: 250, y: 400 },
-    { x: 650, y: 600 },
-    { x: 1250, y: 250 },
-    { x: 1050, y: 350 },
-    { x: 1090, y: 550 },
-    { x: 1300, y: 550 },
-  ];
+  // generer des positions d'obstacles de manière aléatoire sans repetition
+  const obstaclePositions = [];
+  while (obstaclePositions.length < 30) {
+    const x = random(100, width - 100);
+    const y = random(100, height - 100);
+    const pos = { x, y };
+    if (!obstaclePositions.some((p) => dist(p.x, p.y, x, y) < 100)) {
+      obstaclePositions.push(pos);
+    }
+  }
 
   // Ajouter des obstacles au jeu en fonction des positions codées en dur
   obstaclePositions.forEach((pos) => {
@@ -140,7 +126,7 @@ function draw() {
     return;
   }
 
-  background(bg);
+  background("white");
   fill("red");
   stroke("white");
   game.affichageScore();
